@@ -1,0 +1,20 @@
+name: Release
+on:
+  release:
+    types: [created]
+jobs:
+  binary:
+    runs-on: macos-26
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - run: sed -i '' "s/0.0.1/$(echo $GITHUB_REF_NAME | cut -c 2-)/" Sources/spinoff/Version.swift
+      - name: Build universal binary
+        run: |
+          swift build -c release --arch arm64 --arch x86_64
+          tar -czf spinoff-macos.tar.gz -C "$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)" spinoff
+      - name: Upload to release
+        run: gh release upload "$GITHUB_REF_NAME" spinoff-macos.tar.gz --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
