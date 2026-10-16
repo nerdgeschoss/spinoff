@@ -1,0 +1,11 @@
+{
+  "name": "spinoff",
+  "version": "0.0.1",
+  "description": "Runs Claude Code worktrees as spinoff slots and keeps toolchain commands inside the slot's devcontainer",
+  "author": {
+    "name": "nerdgeschoss"
+  },
+  "homepage": "https://github.com/nerdgeschoss/spinoff",
+  "repository": "https://github.com/nerdgeschoss/spinoff",
+  "license": "MIT"
+}

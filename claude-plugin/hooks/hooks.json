@@ -1,0 +1,20 @@
+{
+  "hooks": {
+    "WorktreeCreate": [
+      {
+        "hooks": [{ "type": "command", "command": "spinoff", "args": ["hook", "worktree-create"] }]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [{ "type": "command", "command": "spinoff", "args": ["hook", "worktree-remove"] }]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "spinoff", "args": ["hook", "pre-tool-use"] }]
+      }
+    ]
+  }
+}
