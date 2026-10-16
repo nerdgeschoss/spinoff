@@ -1,0 +1,14 @@
+{
+  "name": "spinoff",
+  "description": "Parallel development environments as git worktrees with their own devcontainer",
+  "owner": {
+    "name": "nerdgeschoss"
+  },
+  "plugins": [
+    {
+      "name": "spinoff",
+      "source": "./claude-plugin",
+      "description": "Runs Claude Code worktrees as spinoff slots and keeps toolchain commands inside the slot's devcontainer"
+    }
+  ]
+}
