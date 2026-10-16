@@ -107,8 +107,25 @@ enum Git {
   {
     let result = try await capture(arguments, in: directory, input: input)
     guard result.succeeded else {
-      throw SpinoffError(result.error.trimmingCharacters(in: .whitespacesAndNewlines))
+      throw SpinoffError.failed(result.error.trimmingCharacters(in: .whitespacesAndNewlines))
     }
     return result.output
+  }
+}
+
+enum Docker {
+  static var isInstalled: Bool { Shell.which("docker") != nil }
+
+  /// Runs docker and returns its trimmed output, failing when Docker is missing or not running.
+  @discardableResult
+  static func run(_ arguments: [String]) async throws -> String {
+    guard isInstalled else {
+      throw SpinoffError.unavailable("Docker isn't installed; run `spinoff doctor`")
+    }
+    let result = try await Shell.capture("docker", arguments)
+    guard result.succeeded else {
+      throw SpinoffError.unavailable("Docker isn't running; run `spinoff doctor`")
+    }
+    return result.output.trimmingCharacters(in: .whitespacesAndNewlines)
   }
 }

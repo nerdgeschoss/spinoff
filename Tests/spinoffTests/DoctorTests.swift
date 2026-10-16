@@ -113,7 +113,7 @@ struct DoctorTests {
     #expect(result.exitCode == 1)
     #expect(
       result.out.contains(
-        "✗ devcontainer CLI not found\n    Install it (brings its own Node.js): \(Toolchain.installCommand)"
+        "✗ devcontainer CLI not found\n    Install it (brings its own Node.js): \(DevcontainerCLI.installCommand)"
       ))
     #expect(result.out.contains("Or install the VS Code Dev Containers extension"))
     #expect(!result.err.contains("[Y/n]"))
@@ -140,9 +140,9 @@ struct DoctorTests {
 
   @Test("parses git versions and requires 2.48")
   func gitVersions() {
-    #expect(Toolchain.parseVersion("git version 2.54.0 (Apple Git-157)") == [2, 54, 0])
-    #expect(Toolchain.parseVersion("git version 2.48") == [2, 48, 0])
-    #expect(Toolchain.isSupportedGit([2, 48, 0]))
-    #expect(!Toolchain.isSupportedGit([2, 47, 1]))
+    #expect(Doctor.parseVersion("git version 2.54.0 (Apple Git-157)") == [2, 54, 0])
+    #expect(Doctor.parseVersion("git version 2.48") == [2, 48, 0])
+    #expect(Doctor.isSupportedGit([2, 48, 0]))
+    #expect(!Doctor.isSupportedGit([2, 47, 1]))
   }
 }

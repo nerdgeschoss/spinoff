@@ -18,17 +18,11 @@ struct Exec: AsyncParsableCommand {
 
   func run() async throws {
     let repo = try await Repo.current()
-    guard let slot = try await repo.currentSlot() else {
-      throw SpinoffError("not inside a slot; `spinoff start` hands one out")
-    }
-    guard Container.config(in: slot.path) != nil else {
-      throw SpinoffError(
-        "\(slot.name) has no devcontainer config; run `spinoff doctor`", exitCode: 125)
-    }
+    let slot = try await repo.requireCurrentSlot()
+    try slot.requireContainerConfig()
 
-    let devcontainer = try await Toolchain.devcontainer(offerInstall: true)
-    try await Container.ensureRunning(slot.path, devcontainer: devcontainer)
-    Container.exec(
-      devcontainer: devcontainer, folder: slot.path, subdirectory: repo.prefix, command: command)
+    let cli = try await DevcontainerCLI.require()
+    try await slot.container.start(with: cli)
+    slot.container.exec(command, in: repo.prefix, with: cli)
   }
 }

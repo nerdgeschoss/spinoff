@@ -15,7 +15,7 @@ struct Hook: AsyncParsableCommand {
     do {
       return try decoder.decode(Input.self, from: FileHandle.standardInput.readDataToEndOfFile())
     } catch {
-      throw SpinoffError("can't read the hook input: \(error)")
+      throw SpinoffError.failed("can't read the hook input: \(error)")
     }
   }
 
@@ -30,8 +30,8 @@ struct Hook: AsyncParsableCommand {
 
     func run() async throws {
       let input = try Hook.input(Input.self)
-      let slot = try await Start.start(
-        in: input.cwd, startingPoint: nil, reason: "claude: \(input.sessionId)")
+      let slot = try await Repo.current(in: input.cwd)
+        .start(at: nil, reason: "claude: \(input.sessionId)")
       print(slot.path)
     }
   }
@@ -45,7 +45,8 @@ struct Hook: AsyncParsableCommand {
     }
 
     func run() async throws {
-      try await Release.release(in: Hook.input(Input.self).worktreePath, number: nil, force: false)
+      let repo = try await Repo.current(in: Hook.input(Input.self).worktreePath)
+      try await repo.release(repo.requireCurrentSlot(), force: false)
     }
   }
 
